@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        .tier-container { background: #1a1a1a; color: white; padding: 10px; font-family: sans-serif; }
+        .row { display: flex; border-bottom: 1px solid #333; min-height: 80px; }
+        .label { width: 80px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 20px; }
+        .drop-area { flex-grow: 1; display: flex; flex-wrap: wrap; padding: 5px; background: #222; }
+        .pool { margin-top: 20px; border: 2px dashed #555; min-height: 100px; display: flex; flex-wrap: wrap; padding: 10px; }
+        .item { width: 60px; height: 60px; margin: 5px; cursor: grab; background: #444; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+        .item img { width: 100%; height: 100%; pointer-events: none; } /* 画像をドラッグの邪魔にしない */
+        .s { background: #ff7f7f; color: #000; }
+        .a { background: #ffbf7f; color: #000; }
+    </style>
+</head>
+<body>
+
+<div class="tier-container">
+    <div class="row"><div class="label s">S</div><div class="drop-area" ondragover="event.preventDefault()" ondrop="drop(event)"></div></div>
+    <div class="row"><div class="label a">A</div><div class="drop-area" ondragover="event.preventDefault()" ondrop="drop(event)"></div></div>
+    
+    <div class="pool" ondragover="event.preventDefault()" ondrop="drop(event)">
+        <div class="item" draggable="true" ondragstart="drag(event)" id="char1"><img src="https://via.placeholder.com/60/0000FF/FFFFFF?text=1"></div>
+        <div class="item" draggable="true" ondragstart="drag(event)" id="char2"><img src="https://via.placeholder.com/60/FF0000/FFFFFF?text=2"></div>
+        <div class="item" draggable="true" ondragstart="drag(event)" id="char3"><img src="https://via.placeholder.com/60/00FF00/FFFFFF?text=3"></div>
+    </div>
+</div>
+
+<script>
+    function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
+    function drop(ev) {
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("text");
+        var target = ev.target;
+        // 子要素（画像など）にドロップしちゃった場合の対策
+        if (!target.classList.contains('drop-area') && !target.classList.contains('pool')) {
+            target = target.parentElement;
+        }
+        target.appendChild(document.getElementById(data));
+    }
+</script>
+</body>
+</html>
