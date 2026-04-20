@@ -2,7 +2,9 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <meta name="referrer" content="no-referrer">
     <style>
+        /* 見た目の設定 */
         .tier-container { background: #1a1a1a; color: white; padding: 10px; font-family: sans-serif; }
         .row { display: flex; border-bottom: 1px solid #333; min-height: 100px; }
         .label { width: 80px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 20px; }
@@ -13,9 +15,12 @@
         .s { background: #ff7f7f; color: #000; }
         .a { background: #ffbf7f; color: #000; }
         .b { background: #ffff7f; color: #000; }
+        #status-msg { color: #ffeb3b; padding: 10px; font-size: 14px; background: #000; }
     </style>
 </head>
 <body>
+
+<div id="status-msg">読み込み中...</div>
 
 <div class="tier-container">
     <div class="row"><div class="label s">S</div><div class="drop-area"></div></div>
@@ -27,58 +32,71 @@
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
 <script>
-    // 設定
     const targetWikiUrl = "https://w.atwiki.jp/genlip/pages/14.html";
-    const proxyUrl = "https://api.allorigins.win/get?url=" + encodeURIComponent(targetWikiUrl);
+    // プロキシを corsproxy.io に変更（こちらの方が安定する場合があります）
+    const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(targetWikiUrl);
     
-    // 除外キーワード（ファイル名に含まれる文字列）
     const excludeKeywords = ['shin.png', 'gi.png', 'tai.png', 'chikara.png', 'thikara.png', 'chi.png'];
-
+    const statusMsg = document.getElementById('status-msg');
     const pool = document.getElementById('character-pool');
 
-    // データを取得
     fetch(proxyUrl)
-        .then(response => response.json())
-        .then(data => {
+        .then(res => {
+            if (!res.ok) throw new Error("通信エラー");
+            return res.text(); // corsproxy.io は text で返ってくることが多い
+        })
+        .then(htmlText => {
             const parser = new DOMParser();
-            const doc = parser.parseFromString(data.contents, 'text/html');
-            
-            // 画像を抽出してフィルタリング
-            const images = Array.from(doc.querySelectorAll('#wikibody img')).filter(img => {
+            const doc = parser.parseFromString(htmlText, 'text/html');
+            const rawImages = Array.from(doc.querySelectorAll('#wikibody img'));
+
+            const filteredImages = rawImages.filter(img => {
                 const link = img.closest('a') ? img.closest('a').href : '';
-                const src = img.src.toLowerCase();
+                const src = (img.getAttribute('src') || "").toLowerCase();
 
-                // リンク先に「310.html」が含まれるものは除外
                 if (link.includes('310.html')) return false;
-
-                // ファイル名に除外キーワードが含まれるものは除外
-                const isIcon = excludeKeywords.some(key => src.includes(key));
-                if (isIcon) return false;
+                if (excludeKeywords.some(key => src.includes(key))) return false;
+                
+                // Wikiの余計なアイコン（NEW!とか）を除外するためのサイズ制限
+                const width = img.getAttribute('width');
+                if (width && parseInt(width) < 20) return false;
 
                 return true;
             });
 
-            // 画像を表示
-            images.forEach((imgElement, index) => {
+            if (filteredImages.length === 0) {
+                statusMsg.innerText = "画像が見つかりませんでした。Wikiの構造を確認してください。";
+                return;
+            }
+
+            filteredImages.forEach((imgElement, index) => {
                 const item = document.createElement('div');
                 item.className = 'item';
                 item.id = 'char-' + index;
 
                 const img = document.createElement('img');
-                img.src = imgElement.src;
-                img.referrerPolicy = "no-referrer"; // @wikiの画像を表示させるための魔法
+                let src = imgElement.getAttribute('src');
+                
+                // URLの補完
+                if (src.startsWith('//')) src = 'https:' + src;
+                else if (src.startsWith('/')) src = 'https://w.atwiki.jp' + src;
+
+                img.src = src;
+                img.referrerPolicy = "no-referrer";
                 
                 item.appendChild(img);
                 pool.appendChild(item);
             });
 
-            // ドラッグ機能
+            statusMsg.innerText = "読み込み完了！ (" + filteredImages.length + "枚)";
             initSortable();
         })
-        .catch(err => console.error("読み込みエラー:", err));
+        .catch(err => {
+            statusMsg.innerText = "エラー: " + err.message + " (再読み込みしてみてください)";
+        });
 
     function initSortable() {
-        new Sortable(pool, { group: 'tier', animation: 150, fallbackOnBody: true });//同じグループ名にしてエリア間の移動、アニメーション速度
+        new Sortable(pool, { group: 'tier', animation: 150, fallbackOnBody: true });
         document.querySelectorAll('.drop-area').forEach(el => {
             new Sortable(el, { group: 'tier', animation: 150 });
         });
