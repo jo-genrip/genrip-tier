@@ -52,14 +52,30 @@
 
             const filteredImages = rawImages.filter(img => {
                 const link = img.closest('a') ? img.closest('a').href : '';
-                const src = (img.getAttribute('src') || "").toLowerCase();
-
-                if (link.includes('310.html')) return false;
-                if (excludeKeywords.some(key => src.includes(key))) return false;
+                //  画像のURLを取得
+                let src = (img.getAttribute('src') || "").toLowerCase();
                 
-                // Wikiの余計なアイコン（NEW!とか）を除外するためのサイズ制限
+                // 【重要】URLを日本語（デコード）に直してから判定する
+                try {
+                    src = decodeURIComponent(src);
+                } catch (e) {
+                    // エラーが出た場合はそのまま進む
+                }
+
+                // 310.html へのリンクを除外
+                if (link.includes('310.html')) return false;
+
+                // 4. 除外キーワード（日本語対応版）のチェック
+                const isExcluded = excludeKeywords.some(key => {
+                    const lowerKey = key.toLowerCase();
+                    return src.includes(lowerKey);
+                });
+
+                if (isExcluded) return false;
+
+                // ついでにWikiの共通アイコン（NEW!とか）をサイズで除外
                 const width = img.getAttribute('width');
-                if (width && parseInt(width) < 20) return false;
+                if (width && parseInt(width) < 30) return false;
 
                 return true;
             });
