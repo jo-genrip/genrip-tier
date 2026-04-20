@@ -27,18 +27,25 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
 <script>
-    function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
-    function drop(ev) {
-        ev.preventDefault();
-        var data = ev.dataTransfer.getData("text");
-        var target = ev.target;
-        // 子要素（画像など）にドロップしちゃった場合の対策
-        if (!target.classList.contains('drop-area') && !target.classList.contains('pool')) {
-            target = target.parentElement;
-        }
-        target.appendChild(document.getElementById(data));
-    }
+    // poolを動かせるようにする
+    new Sortable(document.querySelector('.pool'), {
+        group: 'tier', // 同じグループ名にすると、エリア間を移動できるようになる
+        animation: 150, // 動く時のアニメーション速度（ミリ秒）
+        fallbackOnBody: true,
+        swapThreshold: 0.65
+    });
+
+    // 各ランクのドロップエリアをすべて動かせるようにする
+    document.querySelectorAll('.drop-area').forEach(el => {
+        new Sortable(el, {
+            group: 'tier',
+            animation: 150
+        });
+    });
+
 </script>
 </body>
 </html>
