@@ -32,18 +32,19 @@
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
 <script>
-    const targetWikiUrl = "https://w.atwiki.jp/genlip/pages/14.html";
-    // プロキシを corsproxy.io に変更
+    const targetWikiUrl = "https://w.atwiki.jp/genlip/pages/14.html";//画像を取得するサイト
+    // プロキシサーバで@wikiにアクセス
     const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(targetWikiUrl);
     
     const excludeKeywords = ['shin.png', 'gi.png', 'tai.png', 'chikara.png', 'thikara.png', 'chi.png','T0_空っぽ1.png','検索.png','kougeki.png','fusegi.png','kasegi.png','1_IMG_7694.jpg','3_IMG_7696','0_IMG_7701','T4_さとり1.png','依姫.jpg','T4_典1.png','豊姫.jpg','T4_プリズムリバー1.png'];
-    const statusMsg = document.getElementById('status-msg');
-    const pool = document.getElementById('character-pool');
-
+   //特定の画像を除外
+    const statusMsg = document.getElementById('status-msg');//ラベルの作成
+    const pool = document.getElementById('character-pool');//ラベルの作成
+    
     fetch(proxyUrl)
         .then(res => {
             if (!res.ok) throw new Error("通信エラー");
-            return res.text(); // corsproxy.ioはtextで返ってくることが多い
+            return res.text(); // バイナリデータをtextで返してもらう
         })
         .then(htmlText => {
             const parser = new DOMParser();
@@ -55,17 +56,17 @@
                 //  画像のURLを取得
                 let src = (img.getAttribute('src') || "").toLowerCase();
                 
-                // 【重要】URLを日本語（デコード）に直してから判定する
+                //URLを日本語（デコード）に直してから判定する
                 try {
                     src = decodeURIComponent(src);
                 } catch (e) {
                     // エラーが出た場合はそのまま進む
                 }
 
-                // 310.html へのリンクを除外
+                // 空っぽ_01のリンク310.htmlを除外
                 if (link.includes('310.html')) return false;
 
-                // 4. 除外キーワード（日本語対応版）のチェック
+                // 除外キーワード（日本語対応版）のチェック
                 const isExcluded = excludeKeywords.some(key => {
                     const lowerKey = key.toLowerCase();
                     return src.includes(lowerKey);
@@ -114,7 +115,7 @@
     function initSortable() {
         new Sortable(pool, { group: 'tier', animation: 150, fallbackOnBody: true });//同じグループ名にしてエリア間移動、あとアニメーション速度
         document.querySelectorAll('.drop-area').forEach(el => {
-            new Sortable(el, { group: 'tier', animation: 150 });//スマホの方
+            new Sortable(el, { group: 'tier', animation: 150 });//スマホの方の処理
         });
     }
 </script>
