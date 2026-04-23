@@ -27,7 +27,11 @@
             overflow-y: auto;
             padding: 10px;
         }
-
+<div class="pool-wrapper" id="pool-wrapper">
+    <button id="toggle-btn">キャラ置場を表示/非表示</button>
+    
+    <div class="pool" id="character-pool"></div>
+</div>
         /* 4. 下のキャラ置場：高さを固定して独立させる */
         .pool {
             height: 250px; 
@@ -39,7 +43,50 @@
             padding: 10px;
             z-index: 100;
         }
+/* poolを包むコンテナの設定 */
+.pool-wrapper {
+    background: #333;
+    border-top: 4px solid #555;
+    transition: all 0.3s ease; /* スルスル動くアニメーション */
+    display: flex;
+    flex-direction: column;
+}
 
+/* ボタン（取っ手）の見た目 */
+#toggle-btn {
+    width: 100%;
+    padding: 10px;
+    background: #444;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    border-bottom: 1px solid #555;
+}
+
+#toggle-btn:hover {
+    background: #555;
+}
+
+/* 閉じている時の状態 */
+.pool-wrapper.closed .pool {
+    height: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.pool-wrapper.closed {
+    border-top: none;
+}
+
+/* pool本体（高さはここでお好みで調整） */
+.pool {
+    height: 250px;
+    overflow-y: auto;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px;
+}
         /* ランク行の見た目 */
         .row { display: flex; border-bottom: 1px solid #333; min-height: 100px; }
         .label { width: 80px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 20px; }
@@ -162,6 +209,20 @@
             new Sortable(el, { group: 'tier', animation: 150 });//スマホの方の処理
         });
     }
+   
+const toggleBtn = document.getElementById('toggle-btn');
+const poolWrapper = document.getElementById('pool-wrapper');
+
+toggleBtn.addEventListener('click', () => {
+    poolWrapper.classList.toggle('closed');
+    
+    // ボタンの文字も変えてあげると親切
+    if (poolWrapper.classList.contains('closed')) {
+        toggleBtn.innerText = "キャラ置場を表示する ▲";
+    } else {
+        toggleBtn.innerText = "キャラ置場を隠す ▼";
+    }
+});
 </script>
 </body>
 </html>
