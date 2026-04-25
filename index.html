@@ -18,15 +18,15 @@
     .main-wrapper {
         display: flex;
         flex-direction: column;
-        height: 100dvh;
-        justify-content: flex-start;
+        height: auto;
+        min-height: 100dvh;;
     }
 
     /* ランクエリア：ここがスクロールする */
     .tier-container {
-        flex: 0 1 auto;
-        max-height: 50dvh; 
-        overflow-y: auto;
+        flex: 1 0 auto;
+        max-height: none; 
+        overflow-y: visible;
         padding: 10px;
         /* スマホ用 */
         -webkit-overflow-scrolling: touch; 
@@ -72,8 +72,10 @@
         background: #222;
     }
     .pool-wrapper.closed{
-        flex:0;
-        min-height:44px;
+        position: static;    
+        flex: 0;
+        min-height: 60px;    
+        border-top: none;
     }
     .pool-wrapper.closed .pool {
         position: static;
