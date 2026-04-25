@@ -40,7 +40,6 @@
         border-top: 2px solid #555;
         z-index: 1000;
         transition: all 0.3s ease;
-        margin-top: 0; 
         overflow: hidden;
         position: sticky;  /* 開いている時は画面下に粘着 */
     bottom: 0;
@@ -79,6 +78,7 @@
     .pool-wrapper.closed .pool {
         position: static;
         border-top: none;
+        height: 0;
         padding: 0;
     }
 
@@ -278,18 +278,6 @@ toggleBtn.addEventListener('click', () => {
         toggleBtn.innerText = "キャラ置場を隠す ▼";
     }
     const tierContainer = document.querySelector('.tier-container');
-
-// スクロールを監視
-tierContainer.addEventListener('scroll', () => {
-    // 一番下までスクロールしたか
-    const isAtBottom = tierContainer.scrollHeight - tierContainer.scrollTop <= tierContainer.clientHeight + 5;
-
-    // もし一番下かつ現在閉じているなら自動で開く
-    if (isAtBottom && poolWrapper.classList.contains('closed')) {
-        poolWrapper.classList.remove('closed');
-        toggleBtn.innerText = "キャラ置場を隠す ▼";
-    }
-});
 });
 </script>
 </body>
