@@ -56,7 +56,7 @@
         justify-content: center;
     }
 
-    /* pool本体：スマホでは少し高めにする */
+    /* pool本体 */
     .pool {
         height: 35dvh; /* 画面の35%を使う */
         overflow-y: auto;
@@ -84,7 +84,7 @@
     /* 画面幅が600px以下の時だけ適用 */
     @media (max-width: 600px) {
         .item {
-            width: 65px; /* スマホ用サイズ */
+            width: 65px; 
             height: auto;
         }
         .label {
@@ -95,17 +95,47 @@
             min-height: auto; 
         }   
         .pool {
-            height: 40dvh; /* スマホでは置場を広く取る */
+            height: 40dvh; 
         }
         .drop-area {
             min-height: 44px;
         }
-        
+        .pool::-webkit-scrollbar,
+        .tier-container::-webkit-scrollbar {
+         width: 8px;    /* 縦スクロールバーの幅 */
+         height: 8px;   /* 横スクロールバーの高さ */
+        }
+
+        /* スクロールバーの背景（レール） */
+        .pool::-webkit-scrollbar-track,
+        .tier-container::-webkit-scrollbar-track {
+            background: #222; 
+            border-radius: 10px;
+        }
+
+        /* バー*/
+        .pool::-webkit-scrollbar-thumb,
+        .tier-container::-webkit-scrollbar-thumb {
+            background: #555; /* バーの色（少し明るめのグレー） */
+            border-radius: 10px;
+            border: 2px solid #222; /* レールとの間に隙間を作ってスッキリ見せる */
+        }
+
+        /* バーの色*/
+        .pool::-webkit-scrollbar-thumb:hover,
+        .tier-container::-webkit-scrollbar-thumb:active {
+            background: #ffeb3b; /* 状態がわかるように黄色（status-msgと同じ色）にする */
+        }
+
+        .pool, .tier-container {
+            scrollbar-width: thin;   
+            scrollbar-color: #555 #222; 
+        }
     }
 
     .item img { width: 100%; height:auto; display: block; pointer-events: none; }
     .row { display: flex; border-bottom: 1px solid #333; min-height: auto;}
-    .label { width: 80px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+    .label { width: 80px; display: flex; flex-shrink: 0; align-items: center; justify-content: center; font-weight: bold; }
     .drop-area { flex-grow: 1; display: flex; flex-wrap: wrap; padding: 2px; background: #222; min-height: 80px; }
     
     /* ランクの色 */
