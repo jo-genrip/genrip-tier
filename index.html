@@ -275,6 +275,19 @@ toggleBtn.addEventListener('click', () => {
     } else {
         toggleBtn.innerText = "キャラ置場を隠す ▼";
     }
+    const tierContainer = document.querySelector('.tier-container');
+
+// スクロールを監視
+tierContainer.addEventListener('scroll', () => {
+    // 一番下までスクロールしたか
+    const isAtBottom = tierContainer.scrollHeight - tierContainer.scrollTop <= tierContainer.clientHeight + 5;
+
+    // もし一番下かつ現在閉じているなら自動で開く
+    if (isAtBottom && poolWrapper.classList.contains('closed')) {
+        poolWrapper.classList.remove('closed');
+        toggleBtn.innerText = "キャラ置場を隠す ▼";
+    }
+});
 });
 </script>
 </body>
