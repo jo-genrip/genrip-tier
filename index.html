@@ -7,20 +7,23 @@
     /* 全体レイアウト */
     html, body {
         /* dvh はスマホのメニューバーを考慮した最新の「高さ」単位です */
-        height:100dvh;
+        height:auto;
         padding: 0;
         margin: 0;
         overflow-y: auto;
         background: #1a1a1a;
         color: white;
         font-family: sans-serif;
-        overflow-y: hidden;
+        overflow-y: auto;
     }
 
     .main-wrapper {
         display: flex;
         height: 100dvh;
         flex-direction: column;
+    }
+    .main-wrapper:has(.pool-wrapper.closed) {
+        height: auto;
     }
 
     /* ランクエリア：ここがスクロールする */
@@ -33,8 +36,8 @@
         -webkit-overflow-scrolling: touch; 
     }
     .main-wrapper:has(.pool-wrapper.closed) .tier-container {
-        max-height: 100dvh;
-        flex: 1;
+        max-height: none;   
+        overflow-y: visible;
     }
     /* poolの引き出し */
     .pool-wrapper {
@@ -48,7 +51,7 @@
         overflow: hidden;
     }
     .pool-wrapper.closed {
-        flex:0;
+        flex:none;
         border-top: none;
         min-height: 60px;
     }
