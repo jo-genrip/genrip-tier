@@ -13,6 +13,7 @@
         background: #1a1a1a;
         color: white;
         font-family: sans-serif;
+        overflow-y: auto;
     }
 
     .main-wrapper {
@@ -23,6 +24,7 @@
     }
     .main-wrapper:has(.pool-wrapper.closed) {
         height: auto;
+        min-height: 100dvh;
     }
 
     /* ランクエリア：ここがスクロールする */
@@ -100,7 +102,6 @@
         .label {
             width: 40px;
             font-size: 16px;
-            flex-shrink: 0;
         }
         .row {
             min-height: auto; 
