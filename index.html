@@ -7,9 +7,9 @@
     /* 全体レイアウト */
     html, body {
         /* dvh はスマホのメニューバーを考慮した最新の「高さ」単位です */
-        height: 100dvh; 
+        height: auto; 
         margin: 0;
-        overflow: hidden;
+        overflow-y: auto;
         background: #1a1a1a;
         color: white;
         font-family: sans-serif;
@@ -34,15 +34,16 @@
 
     /* poolの引き出し */
     .pool-wrapper {
-        flex: 1;
         display: flex;
         flex-direction: column;
         background: #333;
         border-top: 2px solid #555;
-        z-index: 100;
+        z-index: 1000;
         transition: all 0.3s ease;
         margin-top: 0; 
         overflow: hidden;
+        position: sticky;  /* 開いている時は画面下に粘着 */
+    bottom: 0;
     }
 
     /* 開閉 */
@@ -76,7 +77,8 @@
         min-height:44px;
     }
     .pool-wrapper.closed .pool {
-        height: 0;
+        position: static;
+        border-top: none;
         padding: 0;
     }
 
