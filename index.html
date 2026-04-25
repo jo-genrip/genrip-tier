@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="referrer" content="no-referrer">
     <style>
-    /* --- 1. 全体レイアウト (スマホ対応) --- */
+    /* 全体レイアウト */
     html, body {
         /* dvh はスマホのメニューバーを考慮した最新の「高さ」単位です */
         height: 100dvh; 
@@ -26,11 +26,11 @@
         flex: 1;
         overflow-y: auto;
         padding: 10px;
-        /* スムーズなスクロール（スマホ用） */
+        /* スマホ用 */
         -webkit-overflow-scrolling: touch; 
     }
 
-    /* キャラ置場の引き出し全体 */
+    /* poolの引き出し */
     .pool-wrapper {
         background: #333;
         border-top: 2px solid #555;
@@ -42,10 +42,10 @@
         min-height: 40px; 
     }
 
-    /* 開閉ボタン：スマホで押しやすいサイズに */
+    /* 開閉 */
     #toggle-btn {
         width: 100%;
-        height: 44px; /* 指で押しやすい高さ */
+        height: 60px; 
         background: #444;
         color: #ffeb3b;
         border: none;
@@ -67,14 +67,12 @@
         transition: height 0.3s ease;
         background: #222;
     }
-
-    /* 閉じた時の設定：完全に消さず、ボタンだけ残す */
     .pool-wrapper.closed .pool {
         height: 0;
         padding: 0;
     }
 
-    /* --- 2. アイコンのサイズ調整 (レスポンシブ) --- */
+    /* アイコンサイズ調整 */
     .item {
         width: 130px; /* PC用 */
         height: 130px;
@@ -83,7 +81,7 @@
         flex-shrink: 0;
     }
 
-    /* 画面幅が600px以下（スマホ）の時だけ適用 */
+    /* 画面幅が600px以下の時だけ適用 */
     @media (max-width: 600px) {
         .item {
             width: 70px; /* スマホ用サイズ */
