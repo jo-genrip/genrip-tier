@@ -7,6 +7,7 @@
     /* 全体レイアウト */
     html, body {
         /* dvh はスマホのメニューバーを考慮した最新の「高さ」単位です */
+        height:auto;
         padding: 0;
         margin: 0;
         overflow-y: auto;
@@ -17,20 +18,14 @@
     }
 
     .main-wrapper {
-        display: flex;
-        flex-direction: column;
-        height: 100dvh;
-        transition: height 0.3s ease;
-    }
-    .main-wrapper:has(.pool-wrapper.closed) {
+        display: block;
         height: auto;
-        min-height: 100dvh;
+        min-heigth:100dvh;
     }
 
     /* ランクエリア：ここがスクロールする */
     .tier-container {
-        flex: 1;
-        overflow-y: auto;
+        overflow-y: visible;
         padding: 10px;
         /* スマホ用 */
         -webkit-overflow-scrolling: touch; 
@@ -49,9 +44,12 @@
         transition: all 0.3s ease;
         overflow: hidden;
         flex-shrink: 0;  
+        position:sticky;
+        bottom:0;
     }
     .pool-wrapper.closed {
         border-top: none;
+        position: static;
     }
     /* 開閉 */
     #toggle-btn {
@@ -273,9 +271,9 @@ toggleBtn.addEventListener('click', () => {
     poolWrapper.classList.toggle('closed');
         
     if (poolWrapper.classList.contains('closed')) {
-        toggleBtn.innerText = "キャラ置場を表示する ▲";
+        toggleBtn.innerText = "想起カードを表示 ▲";
     } else {
-        toggleBtn.innerText = "キャラ置場を隠す ▼";
+        toggleBtn.innerText = "想起カードをを非表示 ▼";
     }
     const tierContainer = document.querySelector('.tier-container');
 });
