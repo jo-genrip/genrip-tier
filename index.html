@@ -145,7 +145,11 @@
     .row { display: flex; border-bottom: 1px solid #333; min-height: auto;}
     .label { width: 80px; display: flex; flex-shrink: 0; align-items: center; justify-content: center; font-weight: bold; }
     .drop-area { flex-grow: 1; display: flex; flex-wrap: wrap; padding: 2px; background: #222; min-height: 80px; }
-    
+    .label:focus {
+    outline: 2px solid #ffeb3b;
+    background: #444 !important;
+    color: #fff !important;
+}
     /* ランクの色 */
     .s { background: #ff7f7f; color: #000; }
     .a { background: #ffbf7f; color: #000; }
@@ -158,18 +162,39 @@
 <div id="status-msg">読み込み中...</div>
 
 <div class="main-wrapper">
-    
-    <div class="tier-container">
-        <div class="row"><div class="label s">S</div><div class="drop-area"></div></div>
-        <div class="row"><div class="label a">A</div><div class="drop-area"></div></div>
-        <div class="row"><div class="label b">B</div><div class="drop-area"></div></div>
+    <div class="tier-container" id="tier-container">
+        <div class="row">
+            <div class="label s" contenteditable="true">S</div>
+            <div class="drop-area"></div>
+            <div class="row-controls">
+                <input type="color" class="color-picker" value="#ff7f7f">
+                <button class="del-row-btn">×</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="label a" contenteditable="true">A</div>
+            <div class="drop-area"></div>
+            <div class="row-controls">
+                <input type="color" class="color-picker" value="#ffbf7f">
+                <button class="del-row-btn">×</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="label b" contenteditable="true">B</div>
+            <div class="drop-area"></div>
+            <div class="row-controls">
+                <input type="color" class="color-picker" value="#ffff7f">
+                <button class="del-row-btn">×</button>
+            </div>
+        </div>
     </div>
 
-   <div class="pool-wrapper" id="pool-wrapper">
-    <button id="toggle-btn">キャラ置場を隠す ▼</button>
-    <div class="pool" id="character-pool"></div>
-</div>
+    <button id="add-row-btn">+ 新しい行を追加</button>
 
+    <div class="pool-wrapper" id="pool-wrapper">
+        <button id="toggle-btn">想起カードを非表示 ▼</button>
+        <div class="pool" id="character-pool"></div>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
@@ -250,6 +275,7 @@
 
             statusMsg.innerText = "読み込み完了！ (" + filteredImages.length + "枚)";
             initSortable();
+            setupRowControls(); // 初期行にイベントを適用
         })
         .catch(err => {
             statusMsg.innerText = "エラー: " + err.message + " (再読み込みしてみてください)";
@@ -275,6 +301,56 @@ toggleBtn.addEventListener('click', () => {
     }
     const tierContainer = document.querySelector('.tier-container');
 });
+const addRowBtn = document.getElementById('add-row-btn');
+const tierContainer = document.getElementById('tier-container');
+
+addRowBtn.addEventListener('click', () => {
+        const newRow = document.createElement('div');
+        newRow.className = 'row';
+        newRow.innerHTML = `
+            <div class="label" style="background: #555;" contenteditable="true">New</div>
+            <div class="drop-area"></div>
+            <div class="row-controls">
+                <input type="color" class="color-picker" value="#555555">
+                <button class="del-row-btn">×</button>
+            </div>
+        `;
+        tierContainer.appendChild(newRow);
+        
+        // 新しいドロップエリアに Sortable 適用
+        new Sortable(newRow.querySelector('.drop-area'), { group: 'tier', animation: 150 });
+        
+        // 新しいコントロール（色・削除）にイベント適用
+        setupRowControls(newRow);
+    });
+
+    // 行の操作（色変更・削除）を管理する関数
+    function setupRowControls(targetRow = document) {
+        // 色変更
+        targetRow.querySelectorAll('.color-picker').forEach(picker => {
+            picker.oninput = (e) => {
+                const label = e.target.closest('.row').querySelector('.label');
+                label.style.background = e.target.value;
+            };
+        });
+
+        // 行削除
+        targetRow.querySelectorAll('.del-row-btn').forEach(btn => {
+            btn.onclick = (e) => {
+                const row = e.target.closest('.row');
+                const items = row.querySelectorAll('.item');
+                // 消す前の中身をpoolに戻す
+                items.forEach(item => pool.appendChild(item));
+                row.remove();
+            };
+        });
+    }
+
+    // 表示・非表示
+    toggleBtn.addEventListener('click', () => {
+        poolWrapper.classList.toggle('closed');
+        toggleBtn.innerText = poolWrapper.classList.contains('closed') ? "想起カードを表示 ▲" : "想起カードを非表示 ▼";
+    });
 </script>
 </body>
 </html>
