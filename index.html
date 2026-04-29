@@ -208,7 +208,10 @@
    //特定の画像を除外
     const statusMsg = document.getElementById('status-msg');//ラベルの作成
     const pool = document.getElementById('character-pool');//ラベルの作成
-    
+    const tierContainer = document.getElementById('tier-container');//ラベルの作成
+    const addRowBtn = document.getElementById('add-row-btn');
+    const poolWrapper = document.getElementById('pool-wrapper');
+    const toggleBtn = document.getElementById('toggle-btn');
     fetch(proxyUrl)
         .then(res => {
             if (!res.ok) throw new Error("通信エラー");
@@ -242,7 +245,7 @@
 
                 if (isExcluded) return false;
 
-                // ついでにWikiの共通アイコン（NEW!とか）をサイズで除外
+                // ついでにWikiの共通アイコンをサイズで除外
                 const width = img.getAttribute('width');
                 if (width && parseInt(width) < 30) return false;
 
@@ -288,22 +291,6 @@
         });
     }
    
-const toggleBtn = document.getElementById('toggle-btn');
-const poolWrapper = document.getElementById('pool-wrapper');
-
-toggleBtn.addEventListener('click', () => {
-    poolWrapper.classList.toggle('closed');
-        
-    if (poolWrapper.classList.contains('closed')) {
-        toggleBtn.innerText = "想起カードを表示 ▲";
-    } else {
-        toggleBtn.innerText = "想起カードをを非表示 ▼";
-    }
-    const tierContainer = document.querySelector('.tier-container');
-});
-const addRowBtn = document.getElementById('add-row-btn');
-const tierContainer = document.getElementById('tier-container');
-
 addRowBtn.addEventListener('click', () => {
         const newRow = document.createElement('div');
         newRow.className = 'row';
@@ -316,40 +303,33 @@ addRowBtn.addEventListener('click', () => {
             </div>
         `;
         tierContainer.appendChild(newRow);
-        
-        // 新しいドロップエリアに Sortable 適用
         new Sortable(newRow.querySelector('.drop-area'), { group: 'tier', animation: 150 });
-        
-        // 新しいコントロール（色・削除）にイベント適用
         setupRowControls(newRow);
     });
 
-    // 行の操作（色変更・削除）を管理する関数
+    // 行の操作を管理する関数
     function setupRowControls(targetRow = document) {
-        // 色変更
         targetRow.querySelectorAll('.color-picker').forEach(picker => {
             picker.oninput = (e) => {
                 const label = e.target.closest('.row').querySelector('.label');
                 label.style.background = e.target.value;
             };
         });
-
-        // 行削除
         targetRow.querySelectorAll('.del-row-btn').forEach(btn => {
             btn.onclick = (e) => {
                 const row = e.target.closest('.row');
                 const items = row.querySelectorAll('.item');
-                // 消す前の中身をpoolに戻す
                 items.forEach(item => pool.appendChild(item));
                 row.remove();
             };
         });
     }
 
-    // 表示・非表示
+    // 表示非表示）
     toggleBtn.addEventListener('click', () => {
         poolWrapper.classList.toggle('closed');
-        toggleBtn.innerText = poolWrapper.classList.contains('closed') ? "想起カードを表示 ▲" : "想起カードを非表示 ▼";
+        const isClosed = poolWrapper.classList.contains('closed');
+        toggleBtn.innerText = isClosed ? "想起カードを表示 ▲" : "想起カードを非表示 ▼";
     });
 </script>
 </body>
