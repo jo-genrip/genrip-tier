@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="referrer" content="no-referrer">
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
     /* 全体レイアウト */
     html, body {
@@ -143,9 +144,13 @@
 
     .item img { width: 100%; height:auto; display: block; pointer-events: none; }
     .row { display: flex; border-bottom: 1px solid #333; min-height: auto;}
-    .label { width: 80px; display: flex; flex-shrink: 0; align-items: center; justify-content: center; font-weight: bold;text-shadow:1px 1px 0 #fff, -1px -1px 0 #fff,1px -1px 0 #fff, -1px 1px 0 #fff; font-weight: 900;}
+    .label { width: 80px; display: flex; flex-shrink: 0; align-items: center; justify-content: center; font-weight: bold; }
     .drop-area { flex-grow: 1; display: flex; flex-wrap: wrap; padding: 2px; background: #222; min-height: 80px; }
-    .label:focus {outline: 2px solid #ffeb3b;background: #444 !important;color: #fff !important;text-shadow:1px 1px 0 #fff, -1px -1px 0 #fff,1px -1px 0 #fff, -1px 1px 0 #fff; font-weight: 900;}
+    .label:focus {
+    outline: 2px solid #ffeb3b;
+    background: #444 !important;
+    color: #fff !important;
+}
     /* ランクの色 */
     .s { background: #ff7f7f; color: #000; }
     .a { background: #ffbf7f; color: #000; }
@@ -186,7 +191,9 @@
     </div>
 
     <button id="add-row-btn">+ 新しい行を追加</button>
-
+    <button id="save-img-btn" style="margin: 10px; padding: 12px; cursor: pointer; background: #28a745; color: #fff; border: none; font-weight: bold;">
+        📷 結果を画像として保存
+    </button>
     <div class="pool-wrapper" id="pool-wrapper">
         <button id="toggle-btn">想起カードを非表示 ▼</button>
         <div class="pool" id="character-pool"></div>
@@ -241,7 +248,7 @@
 
                 if (isExcluded) return false;
 
-                // ついでにWikiの共通アイコンをサイズで除外
+                // ついでにWikiの共通アイコン（NEW!とか）をサイズで除外
                 const width = img.getAttribute('width');
                 if (width && parseInt(width) < 30) return false;
 
@@ -266,6 +273,7 @@
                 else if (src.startsWith('/')) src = 'https://w.atwiki.jp' + src;
 
                 img.src = src;
+                img.crossorigin="anonymous";
                 img.referrerPolicy = "no-referrer";
                 
                 item.appendChild(img);
@@ -291,7 +299,7 @@ addRowBtn.addEventListener('click', () => {
         const newRow = document.createElement('div');
         newRow.className = 'row';
         newRow.innerHTML = `
-            <div class="label" style="background: #555;color: #000;" contenteditable="true">New</div>
+            <div class="label" style="background: #555;" contenteditable="true">New</div>
             <div class="drop-area"></div>
             <div class="row-controls">
                 <input type="color" class="color-picker" value="#555555">
@@ -303,7 +311,7 @@ addRowBtn.addEventListener('click', () => {
         setupRowControls(newRow);
     });
 
-    // 行の操作を管理する関数
+    // 行の操作（色変更・削除）を管理する関数
     function setupRowControls(targetRow = document) {
         targetRow.querySelectorAll('.color-picker').forEach(picker => {
             picker.oninput = (e) => {
@@ -321,12 +329,36 @@ addRowBtn.addEventListener('click', () => {
         });
     }
 
-    // 表示非表示）
+    // 表示・非表示の切り替え（命令を1つに統合）
     toggleBtn.addEventListener('click', () => {
         poolWrapper.classList.toggle('closed');
         const isClosed = poolWrapper.classList.contains('closed');
         toggleBtn.innerText = isClosed ? "想起カードを表示 ▲" : "想起カードを非表示 ▼";
     });
+    const saveImgBtn = document.getElementById('save-img-btn');
+
+saveImgBtn.addEventListener('click', () => {
+    // 保存対象の要素（Tier表全体）
+    const target = document.getElementById('tier-container');
+    
+    // 撮影の一瞬だけボタンを消す（画像に映り込まないようにする）
+    document.getElementById('add-row-btn').style.display = 'none';
+    saveImgBtn.style.display = 'none';
+
+    html2canvas(target, {
+        useCORS: true, // 外部画像を許可するおまじない
+        backgroundColor: '#1a1a1a', // 背景色を黒に合わせる
+    }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'my-tier-list.png';
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+
+        // ボタンを戻す
+        document.getElementById('add-row-btn').style.display = 'inline-block';
+        saveImgBtn.style.display = 'inline-block';
+    });
+});
 </script>
 </body>
 </html>
