@@ -332,14 +332,6 @@ addRowBtn.addEventListener('click', () => {
         });
     }
 
-    // 表示・非表示の切り替え（命令を1つに統合）
-    toggleBtn.addEventListener('click', () => {
-        poolWrapper.classList.toggle('closed');
-        const isClosed = poolWrapper.classList.contains('closed');
-        toggleBtn.innerText = isClosed ? "想起カードを表示 ▲" : "想起カードを非表示 ▼";
-    });
-    const saveImgBtn = document.getElementById('save-img-btn');
-
 // 表示・非表示の切り替え（重複を削除して一本化）
     toggleBtn.addEventListener('click', () => {
         poolWrapper.classList.toggle('closed');
