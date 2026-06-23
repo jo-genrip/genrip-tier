@@ -302,7 +302,7 @@
         // Tier表の行（row）そのものを上下に並び替えられるようにする
         new Sortable(tierContainer, {
             animation: 150,
-            handle: '.label' // ★重要：ラベル（S、A、Bなど）を掴んだ時だけ行が動くようにする設定
+            handle: '.move-row-handle'
         });
        
     }
@@ -315,7 +315,7 @@ addRowBtn.addEventListener('click', () => {
             <div class="drop-area"></div>
             <div class="row-controls">
                 <input type="color" class="color-picker" value="#555555">
-                <button class="del-row-btn">×</button>
+                <button class="move-row-handle">☰</button> <button class="del-row-btn">×</button>
             </div>
         `;
         tierContainer.appendChild(newRow);
