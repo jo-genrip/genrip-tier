@@ -95,9 +95,11 @@
 
     /* 画面幅が600px以下の時だけ適用 */
     @media (max-width: 600px) {
-        .item {
-            width: 65px; 
-            height: auto;
+        .drop-area {
+            flex-wrap: nowrap !important; /* 横一列に強制する */
+            overflow-x: auto;            /* はみ出したら横スクロール */
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch; /* スマホで滑らかにスクロール */
         }
         .label {
             width: 40px;
@@ -291,11 +293,18 @@
             statusMsg.innerText = "エラー: " + err.message + " (再読み込みしてみてください)";
         });
 
-    function initSortable() {
+   function initSortable() {
         new Sortable(pool, { group: 'tier', animation: 150, fallbackOnBody: true });//同じグループ名にしてエリア間移動、あとアニメーション速度
         document.querySelectorAll('.drop-area').forEach(el => {
             new Sortable(el, { group: 'tier', animation: 150 });//スマホの方の処理
         });
+       
+        // Tier表の行（row）そのものを上下に並び替えられるようにする
+        new Sortable(tierContainer, {
+            animation: 150,
+            handle: '.label' // ★重要：ラベル（S、A、Bなど）を掴んだ時だけ行が動くようにする設定
+        });
+       
     }
    
 addRowBtn.addEventListener('click', () => {
