@@ -276,7 +276,7 @@
                 else if (src.startsWith('/')) src = 'https://w.atwiki.jp' + src;
 
                 img.src = src;
-                img.crossorigin="anonymous";
+                img.crossOrigin="anonymous";
                 img.referrerPolicy = "no-referrer";
                 
                 item.appendChild(img);
@@ -340,43 +340,43 @@ addRowBtn.addEventListener('click', () => {
     });
     const saveImgBtn = document.getElementById('save-img-btn');
 
-// 表示・非表示の切り替え（統合済み）
-toggleBtn.addEventListener('click', () => {
-    poolWrapper.classList.toggle('closed');
-    const isClosed = poolWrapper.classList.contains('closed');
-    toggleBtn.innerText = isClosed ? "想起カードを表示 ▲" : "想起カードを非表示 ▼";
-});
-
-// 画像保存の処理（右側のコントロールを隠す修正版）
-const saveImgBtn = document.getElementById('save-img-btn');
-
-saveImgBtn.addEventListener('click', () => {
-    const target = document.getElementById('tier-container');
-    const addBtn = document.getElementById('add-row-btn');
-    
-    // 右端のカラーピッカーや×ボタンをすべて取得
-    const rowControls = document.querySelectorAll('.row-controls');
-    
-    // 一瞬だけすべてのボタンを消す
-    addBtn.style.display = 'none';
-    saveImgBtn.style.display = 'none';
-    rowControls.forEach(control => control.style.display = 'none'); // 右端を隠す
-
-    html2canvas(target, {
-        useCORS: true,
-        backgroundColor: '#1a1a1a',
-    }).then(canvas => {
-        const link = document.createElement('a');
-        link.download = 'my-tier-list.png';
-        link.href = canvas.toDataURL("image/png");
-        link.click();
-
-        // 終わったら元に戻す
-        addBtn.style.display = 'inline-block';
-        saveImgBtn.style.display = 'inline-block';
-        rowControls.forEach(control => control.style.display = 'flex'); // 右端を復活させる
+// 表示・非表示の切り替え（重複を削除して一本化）
+    toggleBtn.addEventListener('click', () => {
+        poolWrapper.classList.toggle('closed');
+        const isClosed = poolWrapper.classList.contains('closed');
+        toggleBtn.innerText = isClosed ? "想起カードを表示 ▲" : "想起カードを非表示 ▼";
     });
-});
+
+    // 画像保存の処理（右側のコントロールを隠す修正版）
+    const saveImgBtn = document.getElementById('save-img-btn');
+
+    saveImgBtn.addEventListener('click', () => {
+        const target = document.getElementById('tier-container');
+        const addBtn = document.getElementById('add-row-btn');
+        
+        // 右端のカラーピッカーや×ボタンをすべて取得
+        const rowControls = document.querySelectorAll('.row-controls');
+        
+        // 一瞬だけすべてのボタンを消す
+        addBtn.style.display = 'none';
+        saveImgBtn.style.display = 'none';
+        rowControls.forEach(control => control.style.display = 'none'); // 右端を隠す
+
+        html2canvas(target, {
+            useCORS: true,
+            backgroundColor: '#1a1a1a',
+        }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = 'my-tier-list.png';
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+
+            // 終わったら元に戻す
+            addBtn.style.display = 'inline-block';
+            saveImgBtn.style.display = 'inline-block';
+            rowControls.forEach(control => control.style.display = 'flex'); // 右端を復活させる
+        });
+    });
 </script>
 </body>
 </html>
