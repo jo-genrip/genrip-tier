@@ -7,9 +7,11 @@
     <style>
     /* 全体レイアウト */
     html, body {
-        /* dvh はスマホのメニューバーを考慮した最新の「高さ」単位です */
-        margin: 0;
+        /* heigth: 100dvh を auto にして、Wiki内で縦に潰れるのを防ぐ */
+        height: auto;
+        min-height: 100dvh;
         padding: 0;
+        margin: 0;
         background: #1a1a1a;
         color: white;
         font-family: sans-serif;
@@ -17,7 +19,8 @@
 
     .main-wrapper {
         display: flex;
-        height: 100dvh;
+        /* min-heightで、中身が増えたら下に伸びるようにする */
+        min-height: 100dvh;
         flex-direction: column;
         transition: height 0.3s ease;
     }
@@ -337,26 +340,41 @@ addRowBtn.addEventListener('click', () => {
     });
     const saveImgBtn = document.getElementById('save-img-btn');
 
+// 表示・非表示の切り替え（統合済み）
+toggleBtn.addEventListener('click', () => {
+    poolWrapper.classList.toggle('closed');
+    const isClosed = poolWrapper.classList.contains('closed');
+    toggleBtn.innerText = isClosed ? "想起カードを表示 ▲" : "想起カードを非表示 ▼";
+});
+
+// 画像保存の処理（右側のコントロールを隠す修正版）
+const saveImgBtn = document.getElementById('save-img-btn');
+
 saveImgBtn.addEventListener('click', () => {
-    // 保存対象の要素（Tier表全体）
     const target = document.getElementById('tier-container');
+    const addBtn = document.getElementById('add-row-btn');
     
-    // 撮影の一瞬だけボタンを消す（画像に映り込まないようにする）
-    document.getElementById('add-row-btn').style.display = 'none';
+    // 右端のカラーピッカーや×ボタンをすべて取得
+    const rowControls = document.querySelectorAll('.row-controls');
+    
+    // 一瞬だけすべてのボタンを消す
+    addBtn.style.display = 'none';
     saveImgBtn.style.display = 'none';
+    rowControls.forEach(control => control.style.display = 'none'); // 右端を隠す
 
     html2canvas(target, {
-        useCORS: true, // 外部画像を許可するおまじない
-        backgroundColor: '#1a1a1a', // 背景色を黒に合わせる
+        useCORS: true,
+        backgroundColor: '#1a1a1a',
     }).then(canvas => {
         const link = document.createElement('a');
         link.download = 'my-tier-list.png';
         link.href = canvas.toDataURL("image/png");
         link.click();
 
-        // ボタンを戻す
-        document.getElementById('add-row-btn').style.display = 'inline-block';
+        // 終わったら元に戻す
+        addBtn.style.display = 'inline-block';
         saveImgBtn.style.display = 'inline-block';
+        rowControls.forEach(control => control.style.display = 'flex'); // 右端を復活させる
     });
 });
 </script>
