@@ -148,7 +148,8 @@
     }
 
     .item img { width: 100%; height:auto; display: block; pointer-events: none; }
- .row {
+    
+    .row {
         position: relative;
         display: flex;
         border-bottom: 1px solid #333;
@@ -158,7 +159,6 @@
     }
     .label { width: 80px; display: flex; flex-shrink: 0; align-items: center; justify-content: center; font-weight: bold; font-size: 20px; color: #000; }
     
-    
     .drop-area { flex-grow: 1; flex-shrink: 1; display: flex; flex-wrap: wrap; padding: 2px; background: #222; min-height: 80px; }
     
     .label:focus {
@@ -166,12 +166,13 @@
         background: #444 !important;
         color: #fff !important;
     }
+    /* ランクの色 */
     .s { background: #ff7f7f; }
     .a { background: #ffbf7f; }
     .b { background: #ffff7f; }
     #status-msg { color: #ffeb3b; padding: 5px; font-size: 12px; background: #000; }
     
-        .row-controls {
+    .row-controls {
         flex-shrink: 0;
         display: flex;
         flex-direction: column;
