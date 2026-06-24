@@ -191,26 +191,6 @@
 </style>
 </head>
 <body>
-}
-
-.drop-area {
-    flex-grow: 1;
-    flex-shrink: 1;
-}
-.row-controls {
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    background: #333;
-    padding: 5px;
-    gap: 5px;
-    justify-content: center;
-    border-left: 1px solid #444;
-    width: 30px;
- }
-</style>
-</head>
-<body>
 
 <div id="status-msg">読み込み中...</div>
 
@@ -221,6 +201,7 @@
             <div class="drop-area"></div>
             <div class="row-controls">
                 <input type="color" class="color-picker" value="#ff7f7f">
+                <button class="move-row-handle">☰</button>
                 <button class="del-row-btn">×</button>
             </div>
         </div>
@@ -229,6 +210,7 @@
             <div class="drop-area"></div>
             <div class="row-controls">
                 <input type="color" class="color-picker" value="#ffbf7f">
+                <button class="move-row-handle">☰</button>
                 <button class="del-row-btn">×</button>
             </div>
         </div>
@@ -237,6 +219,7 @@
             <div class="drop-area"></div>
             <div class="row-controls">
                 <input type="color" class="color-picker" value="#ffff7f">
+                <button class="move-row-handle">☰</button>
                 <button class="del-row-btn">×</button>
             </div>
         </div>
@@ -357,8 +340,9 @@
 addRowBtn.addEventListener('click', () => {
         const newRow = document.createElement('div');
         newRow.className = 'row';
+        // 追加行のテキストのデフォルト文字が黒（color: #000;）になるよう調整
         newRow.innerHTML = `
-            <div class="label" style="background: #555;" contenteditable="true">New</div>
+            <div class="label" style="background: #555; color: #000;" contenteditable="true">New</div>
             <div class="drop-area"></div>
             <div class="row-controls">
                 <input type="color" class="color-picker" value="#555555">
@@ -402,7 +386,7 @@ addRowBtn.addEventListener('click', () => {
         const target = document.getElementById('tier-container');
         const addBtn = document.getElementById('add-row-btn');
         
-        // 右端のカラーピッカーや×ボタンをすべて取得
+        // 右端のカラーピッカーや×ボタン、☰つまみをすべて取得
         const rowControls = document.querySelectorAll('.row-controls');
         
         // 一瞬だけすべてのボタンを消す
