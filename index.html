@@ -160,7 +160,20 @@
     .s { background: #ff7f7f; color: #000; }
     .a { background: #ffbf7f; color: #000; }
     .b { background: #ffff7f; color: #000; }
-    #status-msg { color: #ffeb3b; padding: 5px; font-size: 12px; background: #000; }
+    .row-controls {
+    display: flex;
+    flex-direction: column;
+    background: #333;
+    padding: 5px;
+    gap: 5px;
+    justify-content: center;
+    border-left: 1px solid #444;
+}
+.color-picker { padding: 0; width: 30px; height: 30px; border: none; cursor: pointer; background: none; }
+.del-row-btn, .move-row-handle { background: #444; color: white; border: 1px solid #555; cursor: pointer; width: 30px; height: 30px; border-radius: 4px; font-weight: bold; display: flex; align-items: center; justify-content: center; }
+.del-row-btn { background: #600; border: none; }
+.del-row-btn:hover { background: #f00; }
+.move-row-handle { cursor: move; background: #555; color: #ffeb3b; }
 </style>
 </head>
 <body>
