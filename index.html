@@ -148,46 +148,19 @@
     }
 
     .item img { width: 100%; height:auto; display: block; pointer-events: none; }
-    
-    .row {
-        position: relative;
-        display: flex;
-        border-bottom: 1px solid #333;
-        min-height: auto;
-        justify-content: space-between; 
-        align-items: stretch;
-    }
-    .label { width: 80px; display: flex; flex-shrink: 0; align-items: center; justify-content: center; font-weight: bold; font-size: 20px; color: #000; }
-    
-    .drop-area { flex-grow: 1; flex-shrink: 1; display: flex; flex-wrap: wrap; padding: 2px; background: #222; min-height: 80px; }
-    
+    .row { display: flex; border-bottom: 1px solid #333; min-height: auto;}
+    .label { width: 80px; display: flex; flex-shrink: 0; align-items: center; justify-content: center; font-weight: bold; }
+    .drop-area { flex-grow: 1; display: flex; flex-wrap: wrap; padding: 2px; background: #222; min-height: 80px; }
     .label:focus {
-        outline: 2px solid #ffeb3b;
-        background: #444 !important;
-        color: #fff !important;
-    }
+    outline: 2px solid #ffeb3b;
+    background: #444 !important;
+    color: #fff !important;
+}
     /* ランクの色 */
-    .s { background: #ff7f7f; }
-    .a { background: #ffbf7f; }
-    .b { background: #ffff7f; }
+    .s { background: #ff7f7f; color: #000; }
+    .a { background: #ffbf7f; color: #000; }
+    .b { background: #ffff7f; color: #000; }
     #status-msg { color: #ffeb3b; padding: 5px; font-size: 12px; background: #000; }
-    
-    .row-controls {
-        flex-shrink: 0;
-        display: flex;
-        flex-direction: column;
-        background: #333;
-        padding: 5px;
-        gap: 5px;
-        justify-content: center;
-        border-left: 1px solid #444;
-        width: 30px; /* 幅を固定 */
-    }
-    .color-picker { padding: 0; width: 30px; height: 30px; border: none; cursor: pointer; background: none; }
-    .del-row-btn, .move-row-handle { background: #444; color: white; border: 1px solid #555; cursor: pointer; width: 30px; height: 30px; border-radius: 4px; font-weight: bold; display: flex; align-items: center; justify-content: center; }
-    .del-row-btn { background: #600; border: none; }
-    .del-row-btn:hover { background: #f00; }
-    .move-row-handle { cursor: move; background: #555; color: #ffeb3b; }
 </style>
 </head>
 <body>
@@ -201,7 +174,6 @@
             <div class="drop-area"></div>
             <div class="row-controls">
                 <input type="color" class="color-picker" value="#ff7f7f">
-                <button class="move-row-handle">☰</button>
                 <button class="del-row-btn">×</button>
             </div>
         </div>
@@ -210,7 +182,6 @@
             <div class="drop-area"></div>
             <div class="row-controls">
                 <input type="color" class="color-picker" value="#ffbf7f">
-                <button class="move-row-handle">☰</button>
                 <button class="del-row-btn">×</button>
             </div>
         </div>
@@ -219,7 +190,6 @@
             <div class="drop-area"></div>
             <div class="row-controls">
                 <input type="color" class="color-picker" value="#ffff7f">
-                <button class="move-row-handle">☰</button>
                 <button class="del-row-btn">×</button>
             </div>
         </div>
@@ -340,9 +310,8 @@
 addRowBtn.addEventListener('click', () => {
         const newRow = document.createElement('div');
         newRow.className = 'row';
-        // 追加行のテキストのデフォルト文字が黒（color: #000;）になるよう調整
         newRow.innerHTML = `
-            <div class="label" style="background: #555; color: #000;" contenteditable="true">New</div>
+            <div class="label" style="background: #555;" contenteditable="true">New</div>
             <div class="drop-area"></div>
             <div class="row-controls">
                 <input type="color" class="color-picker" value="#555555">
@@ -386,7 +355,7 @@ addRowBtn.addEventListener('click', () => {
         const target = document.getElementById('tier-container');
         const addBtn = document.getElementById('add-row-btn');
         
-        // 右端のカラーピッカーや×ボタン、☰つまみをすべて取得
+        // 右端のカラーピッカーや×ボタンをすべて取得
         const rowControls = document.querySelectorAll('.row-controls');
         
         // 一瞬だけすべてのボタンを消す
